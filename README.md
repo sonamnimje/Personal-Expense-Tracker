@@ -1,20 +1,73 @@
-# Personal-Expense-Tracker
-# Description:
+import json
+import os
 
-ExpenseTracker is a user-friendly personal finance app designed to help individuals track and manage their expenses. With ExpenseTracker, you can easily record your daily expenses, categorize them, and set budgets to stay on top of your finances.
+class ExpenseTracker:
+    def __init__(self, filename='expenses.json'):
+        self.filename = filename
+        self.expenses = self.load_expenses()
 
-# Core Features:
+    def load_expenses(self):
+        if os.path.exists(self.filename):
+            with open(self.filename, 'r') as file:
+                return json.load(file)
+        return []
 
-1. Expense Tracking: Record your daily expenses with ease, including date, amount, category, and notes.
-2. Categorization: Categorize your expenses into predefined categories (e.g., Food, Transportation, Entertainment) or create custom categories.
-3. Budgeting: Set budgets for specific categories or overall expenses to stay within your means.
-4. Reporting: Generate reports to visualize your spending habits, including pie charts, bar graphs, and detailed expense lists.
-5. Alerts: Receive notifications when you go over budget or when a bill is due.
-6. Data Import/Export: Import data from other apps or export data to spreadsheets for further analysis.
- # Technologies Used
-Frontend-- HTML/CSS: Standard markup languages for building web pages.
+    def save_expenses(self):
+        with open(self.filename, 'w') as file:
+            json.dump(self.expenses, file, indent=4)
 
-Database--
-1. MySQL: A popular open-source relational database management system.
-2. MongoDB: A popular NoSQL database management system.
+    def add_expense(self, amount, category, description):
+        expense = {
+            'amount': amount,
+            'category': category,
+            'description': description
+        }
+        self.expenses.append(expense)
+        self.save_expenses()
+        print("Expense added successfully!")
 
+    def view_expenses(self):
+        if not self.expenses:
+            print("No expenses recorded.")
+            return
+        for index, expense in enumerate(self.expenses, start=1):
+            print(f"{index}. Amount: {expense['amount']}, Category: {expense['category']}, Description: {expense['description']}")
+
+    def delete_expense(self, index):
+        if 0 <= index < len(self.expenses):
+            removed = self.expenses.pop(index)
+            self.save_expenses()
+            print(f"Removed expense: {removed}")
+        else:
+            print("Invalid index. Please try again.")
+
+def main():
+    tracker = ExpenseTracker()
+
+    while True:
+        print("\nExpense Tracker")
+        print("1. Add Expense")
+        print("2. View Expenses")
+        print("3. Delete Expense")
+        print("4. Exit")
+        choice = input("Choose an option: ")
+
+        if choice == '1':
+            amount = float(input("Enter amount: "))
+            category = input("Enter category: ")
+            description = input("Enter description: ")
+            tracker.add_expense(amount, category, description)
+        elif choice == '2':
+            tracker.view_expenses()
+        elif choice == '3':
+            tracker.view_expenses()
+            index = int(input("Enter the index of the expense to delete: ")) - 1
+            tracker.delete_expense(index)
+        elif choice == '4':
+            print("Exiting the Expense Tracker. Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
