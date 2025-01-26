@@ -1,73 +1,30 @@
-import json
-import os
+Overview:
+The app allows users to:
 
-class ExpenseTracker:
-    def __init__(self, filename='expenses.json'):
-        self.filename = filename
-        self.expenses = self.load_expenses()
+Record expenses (amount, category, description, date).
+View and manage expenses.
+Analyze spending patterns (e.g., summaries, graphs, and reports).
+Set budgets to monitor financial goals.
 
-    def load_expenses(self):
-        if os.path.exists(self.filename):
-            with open(self.filename, 'r') as file:
-                return json.load(file)
-        return []
+Development Plan:
 
-    def save_expenses(self):
-        with open(self.filename, 'w') as file:
-            json.dump(self.expenses, file, indent=4)
+1. Core Features
+Add Expenses: Input expense details (amount, category, description, date).
+View Expenses: Display a list of recorded expenses, categorized and sortable.
+Delete/Edit Expenses: Modify or remove incorrect entries.
+Expense History: Keep all records saved persistently.
+2. Additional Features
+Budget Tracking: Set monthly limits and warn users of overspending.
+Analytics: Graphs showing expenses by category or time (using matplotlib or plotly).
+Recurring Expenses: Automate regular entries (e.g., rent, subscriptions).
+Export Data: Save reports as CSV, JSON, or PDF for offline analysis.
 
-    def add_expense(self, amount, category, description):
-        expense = {
-            'amount': amount,
-            'category': category,
-            'description': description
-        }
-        self.expenses.append(expense)
-        self.save_expenses()
-        print("Expense added successfully!")
-
-    def view_expenses(self):
-        if not self.expenses:
-            print("No expenses recorded.")
-            return
-        for index, expense in enumerate(self.expenses, start=1):
-            print(f"{index}. Amount: {expense['amount']}, Category: {expense['category']}, Description: {expense['description']}")
-
-    def delete_expense(self, index):
-        if 0 <= index < len(self.expenses):
-            removed = self.expenses.pop(index)
-            self.save_expenses()
-            print(f"Removed expense: {removed}")
-        else:
-            print("Invalid index. Please try again.")
-
-def main():
-    tracker = ExpenseTracker()
-
-    while True:
-        print("\nExpense Tracker")
-        print("1. Add Expense")
-        print("2. View Expenses")
-        print("3. Delete Expense")
-        print("4. Exit")
-        choice = input("Choose an option: ")
-
-        if choice == '1':
-            amount = float(input("Enter amount: "))
-            category = input("Enter category: ")
-            description = input("Enter description: ")
-            tracker.add_expense(amount, category, description)
-        elif choice == '2':
-            tracker.view_expenses()
-        elif choice == '3':
-            tracker.view_expenses()
-            index = int(input("Enter the index of the expense to delete: ")) - 1
-            tracker.delete_expense(index)
-        elif choice == '4':
-            print("Exiting the Expense Tracker. Goodbye!")
-            break
-        else:
-            print("Invalid choice. Please try again.")
-
-if __name__ == "__main__":
-    main()
+Tech Stack:
+Backend (Core Logic)-
+Python: For managing data, file operations, and core business logic.
+JSON or SQLite: For persistent data storage.
+Frontend-
+CLI-based (basic): Command-line interaction for quick use.
+GUI-based (advanced): Use Python libraries like:
+Tkinter: Simple built-in GUI framework.
+PyQt or Kivy: For more advanced UI/UX.
