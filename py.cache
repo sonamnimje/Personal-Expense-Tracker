@@ -1,55 +1,73 @@
-import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
+import json
+import os
 
-# Initialize the expense dataframe
-if 'expenses' not in st.session_state:
-    st.session_state.expenses = pd.DataFrame(columns=['Date', 'Category', 'Amount', 'Description'])
+class ExpenseTracker:
+    def __init__(self, filename='expenses.json'):
+        self.filename = filename
+        self.expenses = self.load_expenses()
 
-def add_expense(date, category, amount, description):
-    new_expense = pd.DataFrame([[date, category, amount, description]], columns=st.session_state.expenses.columns)
-    st.session_state.expenses = pd.concat([st.session_state.expenses, new_expense], ignore_index=True)
+    def load_expenses(self):
+        if os.path.exists(self.filename):
+            with open(self.filename, 'r') as file:
+                return json.load(file)
+        return []
 
-def load_expenses():
-    uploaded_file = st.file_uploader("Choose a file", type=['csv'])
-    if uploaded_file is not None:
-        st.session_state.expenses = pd.read_csv(uploaded_file)
+    def save_expenses(self):
+        with open(self.filename, 'w') as file:
+            json.dump(self.expenses, file, indent=4)
 
-def save_expenses():
-    st.session_state.expenses.to_csv('expenses.csv', index=False)
-    st.success("Expenses saved successfully!")
+    def add_expense(self, amount, category, description):
+        expense = {
+            'amount': amount,
+            'category': category,
+            'description': description
+        }
+        self.expenses.append(expense)
+        self.save_expenses()
+        print("Expense added successfully!")
 
-def visualize_expenses():
-    if not st.session_state.expenses.empty:
-        fig, ax = plt.subplots()
-        sns.barplot(data=st.session_state.expenses, x='Category', y='Amount', ax=ax)
-        plt.xticks(rotation=45)
-        st.pyplot(fig)
-    else:
-        st.warning("No expenses to visualize!")
+    def view_expenses(self):
+        if not self.expenses:
+            print("No expenses recorded.")
+            return
+        for index, expense in enumerate(self.expenses, start=1):
+            print(f"{index}. Amount: {expense['amount']}, Category: {expense['category']}, Description: {expense['description']}")
 
-st.title('DevDuniya Expense Tracker')
+    def delete_expense(self, index):
+        if 0 <= index < len(self.expenses):
+            removed = self.expenses.pop(index)
+            self.save_expenses()
+            print(f"Removed expense: {removed}")
+        else:
+            print("Invalid index. Please try again.")
 
-with st.sidebar:
-    st.header('Add Expense')
-    date = st.date_input('Date')
-    category = st.selectbox('Category', ['Food', 'Transport', 'Entertainment', 'Utilities', 'Other'])
-    amount = st.number_input('Amount', min_value=0.0, format="%.2f")
-    description = st.text_input('Description')
-    if st.button('Add'):
-        add_expense(date, category, amount, description)
-        st.success('Expense added!')
+def main():
+    tracker = ExpenseTracker()
 
-    st.header('File Operations')
-    if st.button('Save Expenses'):
-        save_expenses()
-    if st.button('Load Expenses'):
-        load_expenses()
+    while True:
+        print("\nExpense Tracker")
+        print("1. Add Expense")
+        print("2. View Expenses")
+        print("3. Delete Expense")
+        print("4. Exit")
+        choice = input("Choose an option: ")
 
-st.header('Expenses')
-st.write(st.session_state.expenses)
+        if choice == '1':
+            amount = float(input("Enter amount: "))
+            category = input("Enter category: ")
+            description = input("Enter description: ")
+            tracker.add_expense(amount, category, description)
+        elif choice == '2':
+            tracker.view_expenses()
+        elif choice == '3':
+            tracker.view_expenses()
+            index = int(input("Enter the index of the expense to delete: ")) - 1
+            tracker.delete_expense(index)
+        elif choice == '4':
+            print("Exiting the Expense Tracker. Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please try again.")
 
-st.header('Visualization')
-if st.button('Visualize Expenses'):
-    visualize_expenses()
+if __name__ == "__main__":
+    main()
