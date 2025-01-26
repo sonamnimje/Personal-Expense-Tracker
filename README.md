@@ -20,9 +20,11 @@ Recurring Expenses: Automate regular entries (e.g., rent, subscriptions).
 Export Data: Save reports as CSV, JSON, or PDF for offline analysis.
 
 Tech Stack:
+
 Backend (Core Logic)-
 Python: For managing data, file operations, and core business logic.
 JSON or SQLite: For persistent data storage.
+
 Frontend-
 CLI-based (basic): Command-line interaction for quick use.
 GUI-based (advanced): Use Python libraries like:
