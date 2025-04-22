@@ -1,32 +1,42 @@
-Overview:
-The app allows users to:
+# Final Project: Personal Expense Tracking App
+The goal of this project is create a Python app that lets you (as a user) track and categorize your monthly expenses and help you budget.
 
-Record expenses (amount, category, description, date).
-View and manage expenses.
-Analyze spending patterns (e.g., summaries, graphs, and reports).
-Set budgets to monitor financial goals.
+The app will let users type their expense category and amount directly into the terminal. It'll then save (append) that expense entry to a file. And finally, read the file to summarise the expense totals for that month.
 
-Development Plan:
+It'll also tell the user how much they can spend for the rest of the month to stay in budget (which is a custom value decided by your app, e.g. $2000.
 
-1. Core Features
-Add Expenses: Input expense details (amount, category, description, date).
-View Expenses: Display a list of recorded expenses, categorized and sortable.
-Delete/Edit Expenses: Modify or remove incorrect entries.
-Expense History: Keep all records saved persistently.
-2. Additional Features
-Budget Tracking: Set monthly limits and warn users of overspending.
-Analytics: Graphs showing expenses by category or time (using matplotlib or plotly).
-Recurring Expenses: Automate regular entries (e.g., rent, subscriptions).
-Export Data: Save reports as CSV, JSON, or PDF for offline analysis.
+# 🎯 App Requirements
+1.Ask the user to add an expense (name, category, amount)
 
-Tech Stack:
+2.Save expense entries to a .csv file.
 
-Backend (Core Logic)-
-Python: For managing data, file operations, and core business logic.
-JSON or SQLite: For persistent data storage.
+3.Read the file to summarise the expense totals for that month
 
-Frontend-
-CLI-based (basic): Command-line interaction for quick use.
-GUI-based (advanced): Use Python libraries like:
-Tkinter: Simple built-in GUI framework.
-PyQt or Kivy: For more advanced UI/UX.
+4.Show the user how much they can spend for the rest of the month (to stay in budget)
+
+# ✨ Bonus
+1.Show expenses by category
+
+2.Give the user a rough estimate of how much they have left to spend per day
+
+# 💡 Recommended Project Structure
+The final project will consist of 2 files:
+
+1.expense.py: A class for creating and storing expense objects.
+
+2.expense_tracker.py: The main application logic.
+# ✅ Tasks
+1.Create the expense.py class.
+
+2.Create the expense_tracker.py file and write the main logic for the app.
+
+3.Run the app to test it.
+
+
+# Example Screenshot
+
+![expense_client](https://github.com/user-attachments/assets/7a5569e1-52cf-47d4-8671-0d2e27acb2c8)
+
+You should also be able to import your generated CSV to apps like Excel and Google Drive.
+
+![expense_drive](https://github.com/user-attachments/assets/d42270b9-036a-4033-acb6-84a64548a6a0)
