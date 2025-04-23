@@ -1,161 +1,103 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expense Tracker</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        #chart {
-            width: 800px;
-            height: 400px;
-        }
-    </style>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Expense Tracker</a>
-    </nav>
-    <div class="container mt-5">
-        <h1>Expenses</h1>
-        <table id="expenses-table" class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Category</th>
-                    <th>Amount</th>
-                    <th>Description</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="expenses-body">
-            </tbody>
-        </table>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-expense-modal">Add Expense</button>
-        <button type="button" class="btn btn-secondary" id="view-chart-btn">View Chart</button>
-        <div id="chart" style="display: none;"></div>
-    </div>
+from expense import Expense
+import calendar
+import datetime
 
-    <!-- Add Expense Modal -->
-    <div class="modal fade" id="add-expense-modal" tabindex="-1" role="dialog" aria-labelledby="add-expense-modal-label" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="add-expense-modal-label">Add Expense</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="add-expense-form">
-                        <div class="form-group">
-                            <label for="date">Date</label>
-                            <input type="date" class="form-control" id="date" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="category">Category</label>
-                            <select class="form-control" id="category" required>
-                                <option value="">Select Category</option>
-                                <option value="Food">Food</option>
-                                <option value="Transportation">Transportation</option>
-                                <option value="Entertainment">Entertainment</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="amount">Amount</label>
-                            <input type="number" class="form-control" id="amount" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="description">Description</label>
-                            <textarea class="form-control" id="description" required></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="add-expense-btn">Add Expense</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
-    <script>
-        let expenses = [];
+def main():
+     print(f"🎯 Running Expense Tracker!")
+     expense_file_path = "expenses.csv"
+     budget = 2000
 
-        $(document).ready(function() {
-            $("#add-expense-btn").click(function() {
-                addExpense();
-            });
-            $("#view-chart-btn").click(function() {
-                viewChart();
-            });
-        });
+     # Get user input for expense.
+     expense = get_user_expense()
 
-        function addExpense() {
-            let expense = {
-                date: $("#date").val(),
-                category: $("#category").val(),
-                amount: $("#amount").val(),
-                description: $("#description").val()
-            };
-            expenses.push(expense);
-            updateExpensesTable();
-            $("#add-expense-modal").modal("hide");
-            $("#add-expense-form")[0].reset();
-        }
+      # Write their expense to a file.
+     save_expense_to_file(expense, expense_file_path)
 
-        function updateExpensesTable() {
-            let tbody = $("#expenses-body");
-            tbody.empty();
-            for (let i = 0; i < expenses.length; i++) {
-                let expense = expenses[i];
-                let row = "<tr>";
-                row += "<td>" + expense.date + "</td>";
-                row += "<td>" + expense.category + "</td>";
-                row += "<td>" + expense.amount + "</td>";
-                row += "<td>" + expense.description + "</td>";
-                row += "<td><button class='btn btn-danger' onclick='deleteExpense(" + i + ")'>Delete</button></td>";
-                row += "</tr>";
-                tbody.append(row);
-            }
-        }
+      # Read file and summarize expenses.
+     summarize_expenses(expense_file_path, budget)
+     pass
 
-        function deleteExpense(index) {
-            expenses.splice(index, 1);
-            updateExpensesTable();
-        }
 
-        function viewChart() {
-            let ctx = document.getElementById("chart").getContext("2d");
-            let chart = new Chart(ctx, {
-                type: "bar",
-                data: {
-                    labels: expenses.map(expense => expense.date),
-                    datasets: [{
-                        label: "Expenses",
-                        data: expenses.map(expense => expense.amount),
-                        backgroundColor: "rgba(255, 99, 132, 0.2)",
-                        borderColor: "rgba(255, 99, 132, 1)",
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-            $("#chart").show();
-        }
-    </script>
-</body>
-</html>
+def get_user_expense():
+     print(f"🎯 Getting User Expense")
+     expense_name = input("Enter expense name: ")
+     expense_amount = float(input("Enter expense amount: "))
+     print(f"You've entered {expense_name}, {expense_amount} ")
+     expense_categories = [
+        "🍔 Food",
+        "🏠 Home",
+        "💼 Work",
+        "🎉 Fun",
+        "✨ Misc",
+    ]
+     
+     while True:
+        print("Select a category: ")
+        for i, category_name in enumerate(expense_categories):
+            print(f"  {i + 1}. {category_name}")
+
+        value_range = f"[1 - {len(expense_categories)}]"
+        selected_index = int(input(f"Enter a category number {value_range}: ")) - 1
+
+        if selected_index in range(len(expense_categories)):
+            selected_category = expense_categories[selected_index]
+            new_expense = Expense(
+                name=expense_name, category=selected_category, amount=expense_amount
+            )
+            return new_expense
+        else:
+            print("Invalid category. Please try again!")
+    
+def save_expense_to_file(expense: Expense, expense_file_path):
+    print(f"🎯 Saving User Expense: {expense} to {expense_file_path}")
+    with open(expense_file_path, "a", encoding="utf-8") as f:
+        f.write(f"{expense.name},{expense.amount},{expense.category}\n")
+    
+def summarize_expenses(expense_file_path, budget):
+    print(f"🎯 Summarizing User Expense")
+    expenses: list[Expense] = []
+    with open(expense_file_path, "r",encoding="utf-8") as f:
+        lines = f.readlines()
+        for line in lines:
+            expense_name, expense_amount, expense_category = line.strip().split(",")
+            line_expense = Expense(
+                name=expense_name,
+                amount=float(expense_amount),
+                category=expense_category,
+            )
+            expenses.append(line_expense)
+
+    amount_by_category = {}
+    for expense in expenses:
+        key = expense.category
+        if key in amount_by_category:
+            amount_by_category[key] += expense.amount
+        else:
+            amount_by_category[key] = expense.amount
+
+    print("Expenses By Category 📈:")
+    for key, amount in amount_by_category.items():
+        print(f"  {key}: ${amount:.2f}")
+
+    total_spent = sum([x.amount for x in expenses])
+    print(f"💵 Total Spent: ${total_spent:.2f}")
+
+    remaining_budget = budget - total_spent
+    print(f"✅ Budget Remaining: ${remaining_budget:.2f}")
+
+    now = datetime.datetime.now()
+    days_in_month = calendar.monthrange(now.year, now.month)[1]
+    remaining_days = days_in_month - now.day
+
+    daily_budget = remaining_budget / remaining_days
+    print(green(f"👉 Budget Per Day: ${daily_budget:.2f}"))
+
+
+def green(text):
+    return f"\033[92m{text}\033[0m"
+
+
+
+if __name__ == "__main__":
+    main()
