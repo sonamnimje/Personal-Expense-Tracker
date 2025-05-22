@@ -5,6 +5,8 @@ A modern web application built with Flask to help users track their personal exp
 ## 🌟 Features
 
 ### Core Functionality
+
+
 - Add new expenses with detailed information
   - Description
   - Amount (in Indian Rupees - ₹)
@@ -16,6 +18,8 @@ A modern web application built with Flask to help users track their personal exp
 - Responsive design for all devices
 
 ### Categories
+
+
 - Food
 - Transportation
 - Entertainment
@@ -24,6 +28,8 @@ A modern web application built with Flask to help users track their personal exp
 - Other
 
 ### Technical Features
+
+
 - Modern UI with animated gradient background
 - Responsive design using Bootstrap 5
 - Real-time data updates
