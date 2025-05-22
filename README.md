@@ -149,5 +149,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - SQLAlchemy documentation
 
 
+## 📸 Screenshot
+
+![Description of Screenshot](image/expense-tracker-ui.png.png)
 
 
