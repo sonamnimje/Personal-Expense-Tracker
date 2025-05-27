@@ -19,7 +19,6 @@ A modern web application built with Flask to help users track their personal exp
 
 ### Categories
 
-
 - Food
 - Transportation
 - Entertainment
