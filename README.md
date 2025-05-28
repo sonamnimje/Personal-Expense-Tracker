@@ -9,7 +9,7 @@ A modern web application built with Flask to help users track their personal exp
 
 - Add new expenses with detailed information
   - Description
-  - Amount (in Indian Rupees - ₹)
+  - Amount (in Indian Rupees(INR) - ₹)
   - Category
   - Automatic date tracking
 - View all expenses in a clean, organized table
